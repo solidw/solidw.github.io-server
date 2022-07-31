@@ -16,7 +16,7 @@ import { PostsModule } from './posts/posts.module';
         rejectUnauthorized: false,
       },
       entities: ['dist/**/*.entity.ts'],
-      // synchronize: true, // This for dev
+      synchronize: true,
       autoLoadEntities: true,
     }),
     PostsModule,

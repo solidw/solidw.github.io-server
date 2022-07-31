@@ -5,6 +5,6 @@ export class Post {
   @PrimaryColumn()
   id: number;
 
-  @Column()
-  count: number;
+  @Column({ nullable: false, default: 0 })
+  views: number;
 }

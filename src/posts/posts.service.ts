@@ -19,12 +19,15 @@ export class PostsService {
   }
 
   async findAll() {
-    return this.postRepository.find();
+    const found = await this.postRepository.find();
+    const sorted = found.sort(({ id: aId }, { id: bId }) => aId - bId);
+
+    return sorted;
   }
 
   async findOne(id: number) {
     return this.postRepository.findOne({
-      select: ['id', 'count'],
+      select: ['id', 'views'],
       where: { id },
     });
   }
@@ -32,6 +35,20 @@ export class PostsService {
   async update(id: number, updatePostDto: UpdatePostDto) {
     const updated = await this.postRepository.update(id, updatePostDto);
     return updated.raw;
+  }
+
+  async increment(id: number) {
+    const found = await this.postRepository.findOne({
+      select: ['id', 'views'],
+      where: { id },
+    });
+
+    if (found == null) {
+      await this.create({ id, views: 0 });
+    }
+
+    const increased = await this.postRepository.increment({ id }, 'views', 1);
+    return increased.affected != null;
   }
 
   async remove(id: number) {
